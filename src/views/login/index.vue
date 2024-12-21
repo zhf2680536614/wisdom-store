@@ -38,6 +38,8 @@
 
 <script>
 import { getPikCode } from '@/api/login'
+// 导入使用 可以在vue组件内使用，也可以在组件外使用，例如main.js中
+// import { Toast } from 'vant'
 export default {
   name: 'LoginPage',
   data () {
@@ -51,9 +53,13 @@ export default {
   },
   methods: {
     async getPikCode () {
-      const { data: { base64, key } } = await getPikCode()
+      const {
+        data: { base64, key }
+      } = await getPikCode()
       this.pikUrl = base64
       this.pikKey = key
+      // toast组件已经挂在到vue实例的属性中，可以使用this.$toast直接调用
+      this.$toast.success('获取成功')
     }
   }
 }
