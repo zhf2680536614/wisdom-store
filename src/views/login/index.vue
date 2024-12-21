@@ -27,7 +27,10 @@
         </div>
         <div class="form-item">
           <input class="inp" placeholder="请输入短信验证码" type="text" />
-          <button>获取验证码</button>
+          <button v-if="totalSecond === second" @click="getCode">
+            获取验证码
+          </button>
+          <button v-else>{{ second + "秒后重新发送" }}</button>
         </div>
       </div>
 
@@ -45,11 +48,21 @@ export default {
   data () {
     return {
       pikUrl: '',
-      pikKey: ''
+      pikKey: '',
+
+      // 倒计时总秒数
+      totalSecond: 60,
+      // 倒计时开始后 -- 的秒数
+      second: 60,
+      // 计时器
+      timer: null
     }
   },
   created () {
     this.getPikCode()
+  },
+  destroyed () {
+    clearInterval(this.timer)
   },
   methods: {
     async getPikCode () {
@@ -59,7 +72,24 @@ export default {
       this.pikUrl = base64
       this.pikKey = key
       // toast组件已经挂在到vue实例的属性中，可以使用this.$toast直接调用
-      this.$toast.success('获取成功')
+      // this.$toast.success('获取成功')
+    },
+    // 获取验证码，开启倒计时
+    async getCode () {
+      // 如果定时器不存在且倒计时复位，才可以开启倒计时
+      if (!this.timer && this.totalSecond === this.second) {
+        this.timer = setInterval(() => {
+          this.second--
+          if (this.second <= 0) {
+            // 倒计时复位
+            this.second = this.totalSecond
+            // 清除倒计时
+            clearInterval(this.timer)
+            this.timer = null
+          }
+        }, 1000)
+        this.$toast.success('验证码发送成功,请注意查收')
+      }
     }
   }
 }
