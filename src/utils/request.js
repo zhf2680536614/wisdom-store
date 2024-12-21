@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { Toast } from 'vant'
 
 const instance = axios.create({
   baseURL: 'http://smart-shop.itheima.net/index.php?s=/api',
@@ -22,7 +23,12 @@ instance.interceptors.response.use(
   function (response) {
     // 2xx 范围内的状态码都会触发该函数。
     // 对响应数据做点什么
-    return response.data
+    const res = response.data
+    if (res.status !== 200) {
+      Toast(res.message)
+      return Promise.reject(res.message)
+    }
+    return res
   },
   function (error) {
     // 超出 2xx 范围的状态码都会触发该函数。
