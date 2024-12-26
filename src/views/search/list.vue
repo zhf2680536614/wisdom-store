@@ -11,7 +11,7 @@
       readonly
       shape="round"
       background="#ffffff"
-      :value="querySearch"
+      :value="querySearch ? querySearch : '商品搜索'"
       show-action
       @click="$router.push('/search')"
     >
@@ -28,7 +28,11 @@
     </div>
 
     <div class="goods-list">
-      <GoodsItem v-for="item in proList" :key="item.goods_id" :item="item"></GoodsItem>
+      <GoodsItem
+        v-for="item in proList"
+        :key="item.goods_id"
+        :item="item"
+      ></GoodsItem>
     </div>
   </div>
 </template>
@@ -51,10 +55,16 @@ export default {
   computed: {
     querySearch () {
       return this.$route.query.search
+    },
+    queryCategoryId () {
+      return this.$route.query.categoryId
     }
   },
   async created () {
-    const { data: { list } } = await getProList({
+    const {
+      data: { list }
+    } = await getProList({
+      categoryId: this.queryCategoryId,
       goodsName: this.querySearch,
       page: this.page
     })
@@ -62,7 +72,10 @@ export default {
   },
   methods: {
     async sort (condition) {
-      const { data: { list } } = await getProList({
+      const {
+        data: { list }
+      } = await getProList({
+        categoryId: this.queryCategoryId,
         sortType: condition,
         goodsName: this.querySearch,
         page: this.page
