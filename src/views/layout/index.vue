@@ -1,7 +1,7 @@
 <template>
   <div>
 
-    <router-view></router-view>
+      <router-view></router-view>
 
     <van-tabbar route active-color="#ee0a24" inactive-color="#000">
       <van-tabbar-item to="/home" icon="wap-home-o">首页</van-tabbar-item>

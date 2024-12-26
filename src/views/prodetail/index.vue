@@ -1,5 +1,7 @@
 <template>
-  <div>我是ProDetail</div>
+  <div>
+    <van-button @click="$router.back()">返回</van-button>
+  </div>
 </template>
 
 <script>
@@ -8,4 +10,8 @@ export default {
 }
 </script>
 
-<style></style>
+<style lang="less">
+button {
+  border: none;
+}
+</style>
