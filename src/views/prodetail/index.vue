@@ -116,7 +116,9 @@
           <count-box v-model="addCount"></count-box>
         </div>
         <div class="showbtn" v-if="goodsDetail.stock_total > 0">
-          <div class="btn" v-if="mode === 'cart'">加入购物车</div>
+          <div class="btn" @click="addCart" v-if="mode === 'cart'">
+            加入购物车
+          </div>
           <div class="btn now" v-if="mode === 'buyNow'">立刻购买</div>
         </div>
         <div class="btn-none" v-else>该商品已抢完</div>
@@ -129,6 +131,7 @@
 import { getProDetail, getProComments } from '@/api/product'
 import defaultUrl from '@/assets/default-avatar.png'
 import CountBox from '@/components/CountBox.vue'
+import { addCart } from '@/api/cart'
 export default {
   name: 'ProDetail',
   components: {
@@ -182,6 +185,44 @@ export default {
     buyFn () {
       this.mode = 'buyNow'
       this.showPannel = true
+    },
+    // 加入购物车
+    async addCart () {
+      // 判断当前用户是否登录
+      // 如果登录了，继续进行加入购物车操作
+      // 如果未登录，则弹出提示框，提醒用户登录
+      const token = this.$store.getters.token
+      if (!token) {
+        this.$dialog
+          .confirm({
+            title: '温馨提示',
+            message: '此时需要先登录才能继续操作哦',
+            confirmButtonText: '去登录',
+            cancelButtonText: '再逛逛'
+          })
+          .then(() => {
+            // this.router.replace()方法与push方法的区别是，该方法不会保存路由的历史记录，而是会覆盖上一个记录
+            this.$router.replace({
+              path: '/login',
+              // 路径传参，代表回退的地址
+              query: {
+                // fullPath => 路由地址 + 传递的参数
+                backUrl: this.$route.fullPath
+              }
+            })
+          })
+          .catch(() => {})
+        return
+      }
+      // 添加到购物车
+      const { data } = await addCart(
+        this.paramsGoodsId,
+        this.addCount,
+        this.goodsDetail.skuList[0].goods_sku_id
+      )
+      this.cartTotal = data.cartTotal
+      this.$toast('加入购物车成功')
+      this.showPannel = false
     }
   }
 }

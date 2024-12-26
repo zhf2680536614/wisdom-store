@@ -1,4 +1,5 @@
 import axios from 'axios'
+import store from '@/store'
 import { Toast } from 'vant'
 
 const instance = axios.create({
@@ -17,6 +18,15 @@ instance.interceptors.request.use(
       loadingType: 'spinner', // loading图形效果
       duration: 0 // 持续展示
     })
+
+    // 自定义请求头
+    // 在需要用户登录才可以进行的操作中携带token
+    const token = store.getters.token
+    if (token) {
+      config.headers['Access-Token'] = token
+      config.headers.platform = 'H5'
+    }
+
     return config
   },
   function (error) {

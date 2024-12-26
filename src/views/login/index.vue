@@ -132,7 +132,10 @@ export default {
       const res = await codeLogin(this.mobile, this.msgCode)
       this.$toast('登陆成功')
       this.$store.commit('user/setUserInfo', res.data)
-      this.$router.push('/')
+
+      // 判断路径是否传承，如果传参，则回退到参数所传递的地址
+      const path = this.$route.query.backUrl || '/'
+      this.$router.replace(path)
     }
   }
 }

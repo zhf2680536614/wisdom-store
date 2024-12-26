@@ -13,7 +13,8 @@ import {
   Button,
   Icon,
   ActionSheet,
-  Rate
+  Rate,
+  Dialog
 } from 'vant'
 
 Vue.use(Rate)
@@ -24,7 +25,7 @@ Vue.use(Swipe)
 Vue.use(SwipeItem)
 Vue.use(Grid)
 Vue.use(Icon)
-
+Vue.use(Dialog)
 Vue.use(Tabbar)
 Vue.use(TabbarItem)
 Vue.use(NavBar)
