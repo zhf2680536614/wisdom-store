@@ -11,9 +11,13 @@ import {
   Grid,
   GridItem,
   Button,
-  Icon
+  Icon,
+  ActionSheet,
+  Rate
 } from 'vant'
 
+Vue.use(Rate)
+Vue.use(ActionSheet)
 Vue.use(GridItem)
 Vue.use(Search)
 Vue.use(Swipe)
