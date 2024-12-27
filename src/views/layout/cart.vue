@@ -3,7 +3,10 @@
     <van-nav-bar title="购物车" fixed />
     <!-- 购物车开头 -->
     <div class="cart-title">
-      <span class="all">共<i>4</i>件商品</span>
+      <span class="all"
+        >共<i>{{ cartTotal }}</i
+        >件商品</span
+      >
       <span class="edit">
         <van-icon name="edit" />
         编辑
@@ -13,32 +16,46 @@
     <!-- 购物车列表 -->
     <div class="cart-list">
       <div class="cart-item" v-for="item in cartList" :key="item.goods_id">
-        <van-checkbox :value="item.isChecked"></van-checkbox>
+        <van-checkbox
+          :value="item.isChecked"
+          @click="toggleCheck(item.goods_id)"
+        ></van-checkbox>
         <div class="show">
           <img :src="item.goods.goods_image" alt="" />
         </div>
         <div class="info">
           <span class="tit text-ellipsis-2">{{ item.goods.goods_name }}</span>
           <span class="bottom">
-            <div class="price">¥ <span>{{ item.goods.goods_price_min }}</span></div>
-            <count-box :value="item.goods_num"></count-box>
+            <div class="price">
+              ¥ <span>{{ item.goods.goods_price_min }}</span>
+            </div>
+            <count-box
+              @input="
+                (value) => {
+                  changeCount(value, item.goods_id, item.goods_sku_id);
+                }
+              "
+              :value="item.goods_num"
+            ></count-box>
           </span>
         </div>
       </div>
     </div>
 
     <div class="footer-fixed">
-      <div class="all-check">
-        <van-checkbox icon-size="18"></van-checkbox>
+      <div @click="toggleAllChecked" class="all-check">
+        <van-checkbox :value="isAllChecked" icon-size="18"></van-checkbox>
         全选
       </div>
 
       <div class="all-total">
         <div class="price">
           <span>合计：</span>
-          <span>¥ <i class="totalPrice">99.99</i></span>
+          <span
+            >¥ <i class="totalPrice">{{ selPrice }}</i></span
+          >
         </div>
-        <div v-if="true" class="goPay">结算(5)</div>
+        <div v-if="true" class="goPay">结算({{ selCartTotal }})</div>
         <div v-else class="delete">删除</div>
       </div>
     </div>
@@ -47,7 +64,7 @@
 
 <script>
 import CountBox from '@/components/CountBox.vue'
-import { mapState } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 export default {
   name: 'CartPage',
   components: {
@@ -55,14 +72,35 @@ export default {
   },
   computed: {
     ...mapState('cart', ['cartList']),
+    ...mapGetters('cart', [
+      'cartTotal',
+      'selCartList',
+      'selCartTotal',
+      'selPrice',
+      'isAllChecked'
+    ]),
     isLogin () {
       return this.$store.getters.token
     }
   },
   created () {
     if (this.isLogin) {
-      console.log('create')
       this.$store.dispatch('cart/getCartList')
+    }
+  },
+  methods: {
+    toggleCheck (goodsId) {
+      this.$store.commit('cart/toggleCheck', goodsId)
+    },
+    toggleAllChecked () {
+      this.$store.commit('cart/toggleAllChecked', !this.isAllChecked)
+    },
+    changeCount (value, goodsId, goodsSkuId) {
+      this.$store.dispatch('cart/changeCountAction', {
+        goodsId,
+        value,
+        goodsSkuId
+      })
     }
   }
 }
