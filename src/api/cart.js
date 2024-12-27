@@ -8,3 +8,8 @@ export const addCart = (goodsId, goodsNum, goodsSkuId) => {
     goodsSkuId
   })
 }
+
+// 获取购物车数据
+export const getCartList = () => {
+  return request.get('/cart/list')
+}

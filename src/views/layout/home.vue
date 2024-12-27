@@ -2,7 +2,7 @@
   <div class="home">
 
     <!-- 导航条 -->
-    <van-nav-bar title="智慧商城" fixed />
+    <van-nav-bar title="wisdom-store" fixed />
 
     <!-- 搜索框 -->
     <van-search
