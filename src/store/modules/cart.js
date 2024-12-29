@@ -1,4 +1,5 @@
-import { getCartList, changeCount } from '@/api/cart'
+import { getCartList, changeCount, delSelect } from '@/api/cart'
+import { Toast } from 'vant'
 
 export default {
   namespaced: true,
@@ -48,6 +49,14 @@ export default {
 
       // 发送请求修改数据库数据
       await changeCount(goodsId, value, goodsSkuId)
+    },
+    // 删除商品
+    async delSelect (context) {
+      const cartId = context.getters.selCartList.map(item => item.id)
+      await delSelect(cartId)
+      Toast('删除成功')
+      // 更新本地数据
+      context.dispatch('getCartList')
     }
   },
   getters: {
@@ -75,7 +84,7 @@ export default {
     },
     // 是否全选
     isAllChecked (state) {
-      return state.cartList.every(item => item.isChecked)
+      return state.cartList.length !== 0 && state.cartList.every(item => item.isChecked)
     }
   }
 }
