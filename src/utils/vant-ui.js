@@ -15,8 +15,13 @@ import {
   ActionSheet,
   Rate,
   Dialog,
-  Checkbox
+  Checkbox,
+  Tab,
+  Tabs
 } from 'vant'
+
+Vue.use(Tab)
+Vue.use(Tabs)
 
 Vue.use(Checkbox)
 Vue.use(Rate)

@@ -13,6 +13,12 @@ export default {
       setItem(userInfo)
     }
   },
-  actions: {},
+  actions: {
+    logout (context) {
+      context.commit('setUserInfo', {})
+      // 跨模块请求方法 {root: true} 在全局查找setCartList方法
+      context.commit('cart/setCartList', [], { root: true })
+    }
+  },
   getters: {}
 }

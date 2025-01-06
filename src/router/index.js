@@ -1,20 +1,22 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-import Login from '@/views/login'
+// 首页全部加载
 import Layout from '@/views/layout'
-import Search from '@/views/search'
-import SearchList from '@/views/search/list.vue'
-import Pay from '@/views/pay'
-import Prodetail from '@/views/prodetail'
-import Myorder from '@/views/myorder'
-
 import Home from '@/views/layout/home.vue'
 import Category from '@/views/layout/category.vue'
 import Cart from '@/views/layout/cart.vue'
 import User from '@/views/layout/user.vue'
 
 import store from '@/store/index'
+
+// 其他页面进行按需导入，路由懒加载
+const Login = () => import('@/views/login')
+const Search = () => import('@/views/search')
+const SearchList = () => import('@/views/search/list.vue')
+const Pay = () => import('@/views/pay')
+const Prodetail = () => import('@/views/prodetail')
+const Myorder = () => import('@/views/myorder')
 
 Vue.use(VueRouter)
 

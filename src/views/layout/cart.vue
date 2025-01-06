@@ -2,7 +2,7 @@
   <div class="cart">
     <van-nav-bar title="购物车" fixed />
     <!-- 购物车开头 -->
-    <div v-if="isLogin">
+    <div v-if="isLogin && cartList.length !== 0">
       <div class="cart-title">
         <span class="all"
           >共<i>{{ cartTotal }}</i
@@ -60,6 +60,7 @@
             v-if="!isEdit"
             class="goPay"
             :class="{ disabled: selCartTotal === 0 }"
+            @click="goPay"
           >
             结算({{ selCartTotal }})
           </div>
@@ -136,6 +137,17 @@ export default {
       if (this.selCartTotal === 0) return
       await this.$store.dispatch('cart/delSelect')
       this.isEdit = false
+    },
+    goPay () {
+      if (this.selCartTotal > 0) {
+        this.$router.push({
+          path: '/pay',
+          query: {
+            mode: 'cart',
+            cartIds: this.selCartList.map((item) => item.id).join(',')
+          }
+        })
+      }
     }
   }
 }
